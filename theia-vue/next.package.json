@@ -1,9 +1,12 @@
 {
     "private": true,
+    "name": "@theia/cpp-docker-example",
+    "version": "0.0.1",
+    "license": "Apache-2.0",
     "theia": {
         "frontend": {
             "config": {
-                "applicationName": "Theia JavaScript/TypeScript Example",
+                "applicationName": "Theia C/C++ Example",
                 "preferences": {
                     "files.enableTrash": false
                 }
@@ -12,24 +15,39 @@
     },
     "dependencies": {
         "@theia/callhierarchy": "next",
+        "@theia/console": "next",
+        "@theia/core": "next",
         "@theia/debug": "next",
+        "@theia/editor": "next",
         "@theia/editor-preview": "next",
         "@theia/file-search": "next",
+        "@theia/filesystem": "next",
         "@theia/getting-started": "next",
         "@theia/git": "next",
+        "@theia/keymaps": "next",
         "@theia/markers": "next",
         "@theia/messages": "next",
+        "@theia/metrics": "next",
         "@theia/mini-browser": "next",
+        "@theia/monaco": "next",
         "@theia/navigator": "next",
         "@theia/outline-view": "next",
+        "@theia/output": "next",
         "@theia/plugin": "next",
         "@theia/plugin-ext": "next",
         "@theia/plugin-ext-vscode": "next",
         "@theia/preferences": "next",
         "@theia/preview": "next",
+        "@theia/process": "next",
         "@theia/search-in-workspace": "next",
+        "@theia/scm": "next",
+        "@theia/task": "next",
         "@theia/terminal": "next",
-        "@theia/vsx-registry": "next"
+        "@theia/typehierarchy": "next",
+        "@theia/userstorage": "next",
+        "@theia/variable-resolver": "next",
+        "@theia/vsx-registry": "next",
+        "@theia/workspace": "next"
     },
     "devDependencies": {
         "@theia/cli": "next"
@@ -102,8 +120,10 @@
         "vscode-builtin-icon-theme-seti": "https://github.com/theia-ide/vscode-builtin-extensions/releases/download/v1.39.1-prel/vscode-theme-seti-1.39.1-prel.vsix",
         "vscode-builtin-xml": "https://github.com/theia-ide/vscode-builtin-extensions/releases/download/v1.39.1-prel/xml-1.39.1-prel.vsix",
         "vscode-builtin-yaml": "https://github.com/theia-ide/vscode-builtin-extensions/releases/download/v1.39.1-prel/yaml-1.39.1-prel.vsix",
+        "vscode-clangd": "https://open-vsx.org/api/llvm-vs-code-extensions/vscode-clangd/0.1.7/file/llvm-vs-code-extensions.vscode-clangd-0.1.7.vsix",
         "vscode-editorconfig": "https://github.com/theia-ide/editorconfig-vscode/releases/download/v0.14.4/EditorConfig-0.14.4.vsix",
-        "vscode-eslint": "https://github.com/theia-ide/vscode-eslint/releases/download/release%2F2.0.15/vscode-eslint-2.0.15.vsix",
-        "vscode-language":"https://github.com/microsoft/vscode-loc/releases/download/release%2F1.68.0/vscode-language-pack-zh-hans-v1.68.0.vsix"
+        "cdt-gdb-vscode": "https://open-vsx.org/api/eclipse-cdt/cdt-gdb-vscode/0.0.92/file/eclipse-cdt.cdt-gdb-vscode-0.0.92.vsix",
+        "plantuml": "https://open-vsx.org/api/jebbs/plantuml/2.14.0/file/jebbs.plantuml-2.14.0.vsix",
+        "vscode-language-pack-zh-hans":"https://github.com/microsoft/vscode-loc/releases/download/release%2F1.68.0/vscode-language-pack-zh-hans-v1.68.0.vsix"
     }
 }
