@@ -15,6 +15,7 @@ RUN apt-get update && \
                        gpg \
                        python \
                        wget \
+                       lsof \
                        xz-utils && \
     rm -rf /var/lib/apt/lists/*
 
