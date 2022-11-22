@@ -70,7 +70,7 @@ ARG version=latest
 ARG strip=false
 
 ENV DEBIAN_FRONTEND=noninteractive \
-    YARN_VERSION=1.22.5 \
+    YARN_VERSION=1.3.2 \
     strip=$strip
 
 # Install Yarn
@@ -117,15 +117,15 @@ ADD $version.package.json package.json
 #;fi
 RUN if [ "$strip" = "true" ]; then \
 yarn --pure-lockfile && \
-    NODE_OPTIONS="--max_old_space_size=4096" yarn theia build # && \
-#    yarn theia download:plugins && \
-#    yarn --production && \
-#    yarn autoclean --init && \
-#    echo *.ts >> .yarnclean && \
-#    echo *.ts.map >> .yarnclean && \
-#    echo *.spec.* >> .yarnclean && \
-#    yarn autoclean --force && \
-#    yarn cache clean \
+    NODE_OPTIONS="--max_old_space_size=4096" yarn theia build && \
+    yarn theia download:plugins && \
+    yarn --production && \
+    yarn autoclean --init && \
+    echo *.ts >> .yarnclean && \
+    echo *.ts.map >> .yarnclean && \
+    echo *.spec.* >> .yarnclean && \
+    yarn autoclean --force && \
+    yarn cache clean \
 ;else \
 yarn --cache-folder ./ycache && rm -rf ./ycache && \
      NODE_OPTIONS="--max_old_space_size=4096" yarn theia build && yarn theia download:plugins \
