@@ -115,21 +115,17 @@ ADD $version.package.json package.json
 #yarn --cache-folder ./ycache && rm -rf ./ycache && \
 #     NODE_OPTIONS="--max_old_space_size=4096" yarn theia build && yarn theia download:plugins \
 #;fi
-RUN if [ "$strip" = "true" ]; then \
-yarn --pure-lockfile && \
-    NODE_OPTIONS="--max_old_space_size=4096" yarn theia build && \
-    yarn theia download:plugins && \
-    yarn --production && \
-    yarn autoclean --init && \
-    echo *.ts >> .yarnclean && \
-    echo *.ts.map >> .yarnclean && \
-    echo *.spec.* >> .yarnclean && \
-    yarn autoclean --force && \
-    yarn cache clean \
-;else \
-yarn --cache-folder ./ycache && rm -rf ./ycache && \
-     NODE_OPTIONS="--max_old_space_size=4096" yarn theia build && yarn theia download:plugins \
-;fi
+RUN yarn --pure-lockfile
+RUN NODE_OPTIONS="--max_old_space_size=4096" yarn theia build
+RUN yarn theia download:plugins
+RUN yarn --production
+RUN yarn autoclean --init
+RUN echo *.ts >> .yarnclean
+RUN echo *.ts.map >> .yarnclean
+RUN echo *.spec.* >> .yarnclean
+RUN yarn autoclean --force
+RUN yarn cache clean
+
 
 FROM common
 
