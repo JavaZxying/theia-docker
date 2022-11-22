@@ -5,7 +5,7 @@ ARG NODE_VERSION=12.18.3
 ENV NODE_VERSION=$NODE_VERSION
 
 # User account
-RUN adduser --disabled-password --gecos '' neuedu
+RUN adduser --disabled-password --gecos '' theia
 
 # Common deps
 RUN apt-get update && \
@@ -131,10 +131,10 @@ WORKDIR /home/theia
 
 RUN chmod g+rw /home && \
     mkdir -p /home/project  && \
-    chown -R neuedu:neuedu /home/theia && \
-    chown -R neuedu:neuedu /home/project;
+    chown -R theia:theia /home/theia && \
+    chown -R theia:theia /home/project;
 
-USER neuedu
+USER theia
 EXPOSE 3000
 ENV SHELL=/bin/bash \
     THEIA_DEFAULT_PLUGINS=local-dir:/home/theia/plugins
