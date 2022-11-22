@@ -115,7 +115,7 @@ ADD $version.package.json package.json
 #yarn --cache-folder ./ycache && rm -rf ./ycache && \
 #     NODE_OPTIONS="--max_old_space_size=4096" yarn theia build && yarn theia download:plugins \
 #;fi
-RUN yarn --pure-lockfile
+#RUN yarn --pure-lockfile
 RUN NODE_OPTIONS="--max_old_space_size=4096" yarn theia build
 RUN yarn theia download:plugins
 RUN yarn --production
