@@ -64,10 +64,10 @@ FROM common as theia
 RUN apt-get update && apt-get -y install libsecret-1-dev
 ARG GITHUB_TOKEN
 # Use "latest" or "next" version for Theia packages
-ARG version=latest
+ARG version=next
 # Optionally build a striped Theia application with no map file or .ts sources.
 # Makes image ~150MB smaller when enabled
-ARG strip=false
+ARG strip=true
 
 ENV DEBIAN_FRONTEND=noninteractive \
     YARN_VERSION=1.3.2 \
@@ -100,36 +100,21 @@ WORKDIR /home/theia
 
 ADD $version.package.json package.json
 
-#RUN if [ "$strip" = "true" ]; then \
-#RUN yarn --pure-lockfile && \
-#    NODE_OPTIONS="--max_old_space_size=4096" yarn theia build && \
-#    yarn theia download:plugins && \
-#    yarn --production && \
-#    yarn autoclean --init && \
-#    echo *.ts >> .yarnclean && \
-#    echo *.ts.map >> .yarnclean && \
-#    echo *.spec.* >> .yarnclean && \
-#    yarn autoclean --force && \
-#    yarn cache clean \
-#;else \
-RUN --cache-folder ./ycache && rm -rf ./ycache && \
+RUN if [ "$strip" = "true" ]; then \
+yarn --pure-lockfile && \
+    NODE_OPTIONS="--max_old_space_size=4096" yarn theia build && \
+    yarn theia download:plugins && \
+    yarn --production && \
+    yarn autoclean --init && \
+    echo *.ts >> .yarnclean && \
+    echo *.ts.map >> .yarnclean && \
+    echo *.spec.* >> .yarnclean && \
+    yarn autoclean --force && \
+    yarn cache clean \
+;else \
+yarn --cache-folder ./ycache && rm -rf ./ycache && \
      NODE_OPTIONS="--max_old_space_size=4096" yarn theia build && yarn theia download:plugins \
-#;fi
-#RUN if [ "$strip" = "true" ]; then \
-#RUN yarn --pure-lockfile && \
-#    NODE_OPTIONS="--max_old_space_size=4096" yarn theia build && \
-#    yarn theia download:plugins && \
-#    yarn --production && \
-#    yarn autoclean --init && \
-#    echo *.ts >> .yarnclean && \
-#    echo *.ts.map >> .yarnclean && \
-#    echo *.spec.* >> .yarnclean && \
-#    yarn autoclean --force && \
-#    yarn cache clean \
-#;else \
-#yarn --cache-folder ./ycache && rm -rf ./ycache && \
-#     NODE_OPTIONS="--max_old_space_size=4096" yarn theia build && yarn theia download:plugins \
-#;fi
+;fi
 
 FROM common
 
