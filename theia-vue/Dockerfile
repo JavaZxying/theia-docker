@@ -1,6 +1,6 @@
 FROM ubuntu:18.04 as common
 
-ARG NODE_VERSION=16.18.1
+ARG NODE_VERSION=12.18.3
 
 ENV NODE_VERSION=$NODE_VERSION
 
@@ -113,7 +113,7 @@ yarn --pure-lockfile && \
     yarn cache clean \
 ;else \
 yarn --cache-folder ./ycache && rm -rf ./ycache && \
-     NODE_OPTIONS="--max_old_space_size=4096" yarn theia build && yarn theia download:plugins  \
+     NODE_OPTIONS="--max_old_space_size=4096" yarn theia build && yarn theia download:plugins \
 ;fi
 
 
