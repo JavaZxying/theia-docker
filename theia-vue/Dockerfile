@@ -100,7 +100,7 @@ WORKDIR /home/theia
 
 ADD $version.package.json package.json
 
-RUN #if [ "$strip" = "true" ]; then \
+ #if [ "$strip" = "true" ]; then \
 #yarn --pure-lockfile && \
 #    NODE_OPTIONS="--max_old_space_size=4096" yarn theia build && \
 #    yarn theia download:plugins && \
@@ -112,7 +112,7 @@ RUN #if [ "$strip" = "true" ]; then \
 #    yarn autoclean --force && \
 #    yarn cache clean \
 #;else \
-yarn --cache-folder ./ycache && rm -rf ./ycache && \
+RUN yarn --cache-folder ./ycache && rm -rf ./ycache && \
      NODE_OPTIONS="--max_old_space_size=4096" yarn theia build && yarn theia download:plugins \
 #;fi
 #RUN yarn --pure-lockfile
