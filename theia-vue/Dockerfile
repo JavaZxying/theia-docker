@@ -62,7 +62,6 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
 
 FROM common as theia
 RUN apt-get update && apt-get -y install libsecret-1-dev
-ARG GITHUB_TOKEN
 # Use "latest" or "next" version for Theia packages
 ARG version=latest
 # Optionally build a striped Theia application with no map file or .ts sources.
@@ -118,9 +117,6 @@ yarn --cache-folder ./ycache && rm -rf ./ycache && \
 
 
 FROM common
-
-ARG LLVM=15
-ARG CMAKE_VERSION=3.18.1
 
 RUN apt-get update && \
     apt-get -y install libsecret-1-0 && \
