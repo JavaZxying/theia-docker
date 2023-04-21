@@ -1,80 +1,53 @@
-#FROM ubuntu:latest
-#
-## 设置时区为Asia/Shanghai
-#RUN ln -snf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo Asia/Shanghai > /etc/timezone &&\
-#    apt-get update && \
-#    apt-get install -y --no-install-recommends \
-#    python3 \
-#    python3-pip \
-#    python3-setuptools \
-#    python3-dev \
-#    build-essential \
-#    git \
-#    curl  \
-#    cmake && \
-#    rm -rf /var/lib/apt/lists/* &&\
-#    pip3 install torch torchvision && \
-#    curl -sL https://deb.nodesource.com/setup_lts.x | bash - && \
-#    apt-get install -y nodejs && \
-#    npm install -g npm@latest && \
-#    rm -rf /var/lib/apt/lists/* && \
-#    pip3 install jupyterlab && \
-#    jupyter labextension install @jupyter-widgets/jupyterlab-manager && \
-#    jupyter labextension install @jupyterlab/toc && \
-#    jupyter labextension install @jupyterlab/git && \
-#    jupyter labextension install @jupyterlab/github
-#
-## 设置工作目录
-#WORKDIR /app
-#
-#
-## 启动 JupyterLab
-#CMD ["jupyter", "lab", "--ip=0.0.0.0", "--no-browser", "--allow-root"]
+FROM docker.io/bitnami/minideb:bullseye
 
-# 第一阶段：构建 PyTorch 和其他依赖项
-FROM ubuntu:20.04 AS build
+ARG TARGETARCH
 
-RUN ln -snf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo Asia/Shanghai > /etc/timezone && \
-    apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    cmake \
-    git \
-    libjpeg-dev \
-    libpng-dev \
-    libtiff-dev \
-    libavformat-dev \
-    libswscale-dev \
-    libpq-dev \
-    python3-dev \
-    python3-pip \
-    python3-setuptools \
-    python3-wheel \
-    && rm -rf /var/lib/apt/lists/*
+LABEL org.opencontainers.image.base.name="docker.io/bitnami/minideb:bullseye" \
+      org.opencontainers.image.created="2023-04-18T14:10:38Z" \
+      org.opencontainers.image.description="Application packaged by VMware, Inc" \
+      org.opencontainers.image.licenses="Apache-2.0" \
+      org.opencontainers.image.ref.name="2.0.0-debian-11-r5" \
+      org.opencontainers.image.title="pytorch" \
+      org.opencontainers.image.vendor="VMware, Inc." \
+      org.opencontainers.image.version="2.0.0"
 
-WORKDIR /tmp
-RUN git clone --recursive https://github.com/pytorch/pytorch.git && \
-    cd pytorch && \
-    pip3 install -r requirements.txt && \
-    python3 setup.py install
+ENV HOME="/" \
+    OS_ARCH="${TARGETARCH:-amd64}" \
+    OS_FLAVOUR="debian-11" \
+    OS_NAME="linux"
 
-# 第二阶段：构建最终的应用程序镜像
-FROM ubuntu:20.04
+COPY prebuildfs /
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+# Install required system packages and dependencies
+RUN install_packages ca-certificates curl libbz2-1.0 libcom-err2 libcrypt1 libffi7 libgcc-s1 libgomp1 libgssapi-krb5-2 libjemalloc2 libk5crypto3 libkeyutils1 libkrb5-3 libkrb5support0 liblzma5 libncursesw6 libnsl2 libreadline8 libsqlite3-0 libssl1.1 libstdc++6 libtinfo6 libtirpc3 numactl procps zlib1g
+RUN mkdir -p /tmp/bitnami/pkg/cache/ && cd /tmp/bitnami/pkg/cache/ && \
+    COMPONENTS=( \
+      "python-3.8.16-9-linux-${OS_ARCH}-debian-11" \
+      "pytorch-2.0.0-0-linux-${OS_ARCH}-debian-11" \
+      "gosu-1.16.0-5-linux-${OS_ARCH}-debian-11" \
+    ) && \
+    for COMPONENT in "${COMPONENTS[@]}"; do \
+      if [ ! -f "${COMPONENT}.tar.gz" ]; then \
+        curl -SsLf "https://downloads.bitnami.com/files/stacksmith/${COMPONENT}.tar.gz" -O ; \
+        curl -SsLf "https://downloads.bitnami.com/files/stacksmith/${COMPONENT}.tar.gz.sha256" -O ; \
+      fi && \
+      sha256sum -c "${COMPONENT}.tar.gz.sha256" && \
+      tar -zxf "${COMPONENT}.tar.gz" -C /opt/bitnami --strip-components=2 --no-same-owner --wildcards '*/files' && \
+      rm -rf "${COMPONENT}".tar.gz{,.sha256} ; \
+    done
+RUN apt-get autoremove --purge -y curl && \
+    apt-get update && apt-get upgrade -y && \
+    apt-get clean && rm -rf /var/lib/apt/lists /var/cache/apt/archives
+RUN chmod g+rwX /opt/bitnami
+RUN mkdir /.local && chmod g+rwX /.local
 
-COPY --from=build /usr/local/lib/python3.8/site-packages/ /usr/local/lib/python3.8/site-packages/
+COPY rootfs /
+RUN /opt/bitnami/scripts/pytorch/postunpack.sh
+ENV APP_VERSION="2.0.0" \
+    BITNAMI_APP_NAME="pytorch" \
+    PATH="/opt/bitnami/python/bin:/opt/bitnami/common/bin:$PATH"
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    python3-dev \
-    python3-pip \
-    python3-setuptools \
-    python3-wheel \
-    libglib2.0-0 \
-    libgl1-mesa-glx \
-    libsm6 \
-    libxext6 \
-    libxrender-dev \
-    && rm -rf /var/lib/apt/lists/*
-
-RUN pip3 install --no-cache-dir jupyterlab torch torchvision
-
-CMD ["jupyter", "lab", "--ip=0.0.0.0", "--allow-root"]
-
+WORKDIR /app
+USER 1001
+ENTRYPOINT [ "/opt/bitnami/scripts/pytorch/entrypoint.sh" ]
+CMD [ "python" ]
