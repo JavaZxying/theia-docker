@@ -1,0 +1,3 @@
+docker build -t tensorflow-notebook .
+
+基于jupyter/tensorflow-notebook:latest

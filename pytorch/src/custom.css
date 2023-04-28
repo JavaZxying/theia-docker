@@ -1,0 +1,34 @@
+/* 隐藏menubar中的导航栏 */
+/* .notebook_app #header {
+    box-shadow:12px 1px 0px 0px rgba(87, 87, 87, 0.2);
+    border-bottom: 1px solid rgba(87, 87, 87, 0.2);
+}
+
+body > #header #header-container,
+body > #header .header-bar {
+    display:none;
+}
+
+#menubar .navbar {
+    border-top:none;
+    border-radius: none!important;
+    border-color: #fff;
+}
+
+#menubar .navbar-collapse {
+    background: #fff;
+    border-color:#fff;
+}
+
+#menubar .navbar-nav {
+    display:none;
+}
+
+#menubar {
+    float: right;
+}
+#maintoolbar {
+    display: block;
+    float: left;
+    width: 30px;
+} */
