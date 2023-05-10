@@ -2,7 +2,7 @@ FROM jupyter/minimal-notebook:ubuntu-22.04
 
 ENV TZ='Asia/Shanghai'
 
-RUN pip install torch torchvision torchaudio
+RUN pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 
 # Install JupyterLab extensions
 RUN pip install jupyterlab
